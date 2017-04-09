@@ -1,0 +1,9 @@
+machine:
+  environment:
+    CIRCLE_ENV: test
+
+deployment:
+  staging:
+    branch: master
+    commands:
+    - ./deploy.sh
