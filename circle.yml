@@ -1,4 +1,6 @@
 machine:
+  services:
+  - docker
   environment:
     CIRCLE_ENV: test
 
