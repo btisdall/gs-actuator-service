@@ -1,4 +1,7 @@
 buildscript {
+    ext {
+        springBootVersion = '1.5.2.RELEASE'
+    }
     repositories {
         mavenCentral()
         maven {
@@ -6,16 +9,19 @@ buildscript {
         }
     }
     dependencies {
-        classpath('org.springframework.boot:spring-boot-gradle-plugin:1.5.1.RELEASE')
-        classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.11.0')
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "se.transmode.gradle:gradle-docker:1.2"
     }
 }
 
+plugins {
+    id "org.springframework.boot" version '1.5.2.RELEASE'
+}
+
 apply plugin: 'java'
-apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
-apply plugin: 'com.palantir.docker'
+apply plugin: 'docker'
 
 jar {
     baseName = 'gs-actuator-service'
@@ -36,8 +42,15 @@ dependencies {
     testCompile('junit:junit')
 }
 
-docker {
-  dependsOn jar
-  name 'bentis-app:latest'
-  files jar.archivePath
+task buildDocker(type: Docker) {
+  baseImage = 'develar/java:latest'
+  push = project.hasProperty('push')
+  tag = 'bentis/hello'
+  addFile {
+    from jar
+    rename {'app.jar'}
+  }
+  exposePort(9000)
+  entryPoint(['java', '-jar', '/app.jar'])
 }
+
