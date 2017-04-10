@@ -54,3 +54,4 @@ task buildDocker(type: Docker) {
   entryPoint(['java', '-jar', '/app.jar'])
 }
 
+buildDocker.dependsOn(build)
