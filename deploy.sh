@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -ex
 
 JQ="jq --raw-output --exit-status"
 
